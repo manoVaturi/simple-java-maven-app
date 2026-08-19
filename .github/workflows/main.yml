@@ -39,6 +39,13 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          load: true
           tags: |
             ormano/java-app:1.0.${{ github.run_number }}
             ormano/java-app:latest
+
+      - name: Verify Docker image runs
+        run: |
+          output=$(docker run --rm ormano/java-app:1.0.${{ github.run_number }})
+          echo "$output"
+          echo "$output" | grep -qF "Hello World!"
