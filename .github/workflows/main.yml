@@ -8,7 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Permissions needed if you want to push the version change back to git
     permissions:
       contents: write
 
@@ -22,34 +21,34 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Bump Patch Version
-        run: |
-          # 1. Read the starting version from pom.xml (e.g., 0.0.0)
-          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "Current version in file: $CURRENT_VERSION"
+      # - name: Bump Patch Version
+      #   run: |
+      #     # 1. Read the starting version from pom.xml (e.g., 0.0.0)
+      #     CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+      #     echo "Current version in file: $CURRENT_VERSION"
 
-          # 2. Extract major, minor, patch parts
-          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+      #     # 2. Extract major, minor, patch parts
+      #     IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
 
-          # 3. Increment just the patch part
-          NEW_PATCH=$((patch + 1))
-          NEW_VERSION="$major.$minor.$NEW_PATCH"
-          echo "Calculated new version: $NEW_VERSION"
+      #     # 3. Increment just the patch part
+      #     NEW_PATCH=$((patch + 1))
+      #     NEW_VERSION="$major.$minor.$NEW_PATCH"
+      #     echo "Calculated new version: $NEW_VERSION"
 
-          # 4. Explicitly tell Maven to overwrite the pom.xml with the new version
-          mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
+      #     # 4. Explicitly tell Maven to overwrite the pom.xml with the new version
+      #     mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
 
-      - name: Build JAR Package
-        run: mvn clean package
+      # - name: Build JAR Package
+      #   run: mvn clean package
 
-      - name: Commit and Push Updated Version
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@://github.com"
+      # - name: Commit and Push Updated Version
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@://github.com"
 
-          # Only commit if the pom.xml actually changed
-          if ! git diff --exit-code pom.xml; then
-            git add pom.xml
-            git commit -m "chore: bump patch version to $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) [skip ci]"
-            git push
-          fi
+      #     # Only commit if the pom.xml actually changed
+      #     if ! git diff --exit-code pom.xml; then
+      #       git add pom.xml
+      #       git commit -m "chore: bump patch version to $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) [skip ci]"
+      #       git push
+      #     fi
