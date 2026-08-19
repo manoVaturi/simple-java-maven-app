@@ -1,16 +1,16 @@
-name: Java CI with Maven
+name: AWS - Java CI with Maven
 
 on:
   pull_request:
     branches:
-      - master
+      - AWS-Infrastructure
     types:
       - closed
 
 jobs:
   on-merge:
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
