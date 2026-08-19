@@ -1,12 +1,15 @@
 name: Java CI with Maven
 
 on:
-  workflow_dispatch:
-  push:
-    branches: ["master"]
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
 
 jobs:
-  build:
+  on-merge:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
