@@ -38,7 +38,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ormano/java-app/app:1.0.${{ github.run_number }}
-
-      # - name: Build with Maven
-      #   run: mvn clean package
+          tags: ormano/java-app:1.0.${{ github.run_number }}
