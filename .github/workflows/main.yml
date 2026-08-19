@@ -1,39 +1,29 @@
-name: Build and Bump Version
+name: Java CI with Maven
 
 on:
   push:
-    branches: [master]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
+          cache: maven
 
-      - name: Bump Patch Version
+      # Update the pom.xml version dynamically
+      - name: Update project patch version with GitHub Run Number
         run: |
-          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "Current version in file: $CURRENT_VERSION"
+          mvn versions:set -DnewVersion=1.0.${{ github.run_number }} -DgenerateBackupPoms=false
 
-          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
-
-          NEW_PATCH=$((patch + 1))
-          NEW_VERSION="$major.$minor.$NEW_PATCH"
-          echo "Calculated new version: $NEW_VERSION"
-
-          mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
-          echo $NEW_VERSION
-
-      - name: Build JAR Package
+      # Continue with your normal build process
+      - name: Build with Maven
         run: mvn clean package
