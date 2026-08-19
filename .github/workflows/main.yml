@@ -10,20 +10,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java
         with:
           java-version: "21"
           distribution: "temurin"
           cache: maven
 
-      # Update the pom.xml version dynamically
       - name: Update project patch version with GitHub Run Number
         run: |
           mvn versions:set -DnewVersion=1.0.${{ github.run_number }} -DgenerateBackupPoms=false
 
-      # Continue with your normal build process
       - name: Build with Maven
         run: mvn clean package
