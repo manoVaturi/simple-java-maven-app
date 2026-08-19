@@ -32,6 +32,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          tags: my-app:latest
+          tags: my-app:1.0.${{ github.run_number }}
       # - name: Build with Maven
       #   run: mvn clean package
